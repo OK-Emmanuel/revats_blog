@@ -30,3 +30,13 @@ class BlogIndexPage(Page):
         context['blogpages'] = blogpages
         return context
 
+
+# Blog Page Tag (Snippet)
+class BlogPageTag(TaggedItemBase):
+    content_object = ParentalKey(
+        'BlogPage',
+        related_name = 'tagged_items',
+        on_delete=models.CASCADE
+    )
+
+
