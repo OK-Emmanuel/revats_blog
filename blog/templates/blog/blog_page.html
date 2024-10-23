@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+{% block body_class %}template-blogindexpage{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+
+<head>
+    <meta charset="utf-8">
+    <title>{{ page.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="{% static 'blog/assets/js/theme-switcher.js' %}"></script>
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'blog/assets/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'blog/assets/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'blog/assets/favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'blog/assets/favicon/site.webmanifest' %}">
+    <link rel="mask-icon" href="{% static 'blog/assets/favicon/safari-pinned-tab.svg' %}" color="#6366f1">
+    <link rel="shortcut icon" href="{% static 'blog/assets/favicon/favicon.ico' %}">
+    <meta name="msapplication-TileColor" content="#080032">
+    <meta name="msapplication-config" content="{% static 'blog/assets/favicon/browserconfig.xml' %}">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" media="screen" href="{% static 'blog/assets/vendor/boxicons/css/boxicons.min.css' %}">
+    <link rel="stylesheet" media="screen" href="{% static 'blog/assets/css/theme.min.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <main class="page-wrapper">
+        <header class="header navbar navbar-expand-lg shadow-sm"
+            style="background: linear-gradient(to right, #020310, #181a4d); height: 300px; padding-top: 20px;">
+            <div class="container px-3 d-flex flex-column align-items-center" style="height: 100%;">
+                <div class="d-flex justify-content-between align-items-center w-100 mb-4">
+                    <a href="index.html" class="navbar-brand pe-3 d-flex align-items-center">
+                        <img src="{% static 'blog/assets/img/logo.svg' %}" width="100">
+                    </a>
+                    <button type="button" class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="d-none d-lg-flex">
+                        <a href="#" class="btn btn-primary btn-sm fs-sm rounded me-2" target="_blank" rel="noopener">Get
+                            Started</a>
+                        <a href="#" class="btn btn-outline-light btn-sm fs-sm rounded" target="_blank"
+                            rel="noopener">Log In</a>
+                    </div>
+                </div>
+                <div class="">
+                    <h6 class="text-white mb-0 fw-light"><span
+                            style="color: #eea9fa; font-family: JetBrains Mono, Monospace;">HOME / BLOG/ </span>{{ page.title }}</h6>
+                    <h1 class="fw-light mb-5" style="color: #eea9fa;">
+                        {{ page.title}}
+                    </h1>
+                </div>
+            </div>
+        </header>
+
+        <section class="container w-75 mt-4 mb-lg-5 pt-lg-2 pb-5">
+            <div id="navbarNav" class="offcanvas offcanvas-end">
+                <div class="offcanvas-header border-bottom">
+                    <h5 class="offcanvas-title">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                        <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+                        <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
+                        <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="offcanvas-header border-top">
+                    <a href="#" class="btn btn-primary w-100" target="_blank" rel="noopener"><i
+                            class="bx bx-cart fs-4 lh-1 me-1"></i>&nbsp;Get Started</a>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row row-cols-lg-1 row-cols-sm-1 row-cols-1 gy-md-2 gy-2">
+
+                    <div class="col pb-3">
+                        <article class="card border-0 shadow-sm h-100">
+                            <div class="position-relative">
+                                <a href="#" class="position-absolute top-0 start-0 w-100 h-100" aria-label="Read more"></a>
+                                <!-- Adjusted image section -->
+                                <div class="blog-image-container text-center" style="margin: 10px auto;">
+                                    {% for item in page.gallery_images.all %}
+                                    <div style="position: relative; margin-bottom: 10px;">
+                                        {% image item.image fill-800x600 %}
+                                        <div class="overlay">
+                                            <p>{{ item.caption }}</p>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                
+                            </div>
+                            <div class="card-body pb-4">
+                                <h3 class="h5 mb-0 fw-500 text-center">
+                                    {{ page.title }}
+                                </h3>
+                                <div class="d-flex align-items-start justify-content-between mb-3">
+                                    <span class="fs-sm text-muted">{{ page.date|date:"M d, Y" }}</span>
+                                </div>
+                                <p class="mt-5">{{ page.intro }}</p>
+                                {{ page.body|richtext }}
+                            </div>
+                        </article>
+                    </div>
+                    
+
+
+                </div>
+            </div>
+
+            
+        </section>
+
+        <footer class="footer bg-dark pt-5 pb-4 pb-lg-5" data-bs-theme="dark" style="background-color:#020300">
+            <div class="container pt-lg-4">
+                <div class="row text-center">
+                    <div class="col-12 col-md-4 mb-3">
+                        <a href="https://www.x.com" target="_blank" class="text-pri-blue mx-2"><i
+                                class="bx bxl-twitter"></i></a>
+                        <a href="https://www.facebook.com" target="_blank" class="text-pri-blue mx-2"><i
+                                class="bx bxl-instagram"></i></a>
+                        <a href="https://www.linkedin.com" target="_blank" class="text-pri-blue mx-2"><i
+                                class="bx bxl-linkedin"></i></a>
+                        <a href="https://www.youtube.com" target="_blank" class="text-pri-blue mx-2"><i
+                                class="bx bxl-youtube"></i></a>
+                    </div>
+                    <div class="col-12 col-md-4 mb-3">
+                        <img src="{% static 'blog/assets/img/revats-light.svg' %}" alt="Website Logo" class="img-fluid"
+                            style="max-height: 50px;">
+                    </div>
+                    <div class="col-12 col-md-4 mb-3">
+                        <p class="nav d-block fs-xs mb-0"><span class="text-light">Copyright &copy; Revats 2024</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <a href="#top" class="btn-scroll-top" data-scroll>
+            <span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span>
+            <i class="btn-scroll-top-icon bx bx-chevron-up"></i>
+        </a>
+        <script src="{% static 'blog/assets/js/theme.min.js' %}"></script>
+    </main>
+</body>
+
+</html>
+
+{% endblock %}

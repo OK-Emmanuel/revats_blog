@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+{% block body_class %}template-blogindexpage{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+   <head>
+      <meta charset="utf-8">
+      <title>Revats Blog</title>
+      <!-- SEO Meta Tags -->
+      <meta name="description" content="Revats Blog Frontend">
+      <meta name="keywords" content="">
+      <meta name="author" content="Revats">
+      <!-- Viewport -->
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- Theme switcher (color modes) -->
+      <script src="{% static 'blog/assets/js/theme-switcher.js' %}"></script>
+      <!-- Favicon and Touch Icons -->
+      <link rel="apple-touch-icon" sizes="180x180" href="{% static 'blog/assets/favicon/apple-touch-icon.png' %}">
+      <link rel="icon" type="image/png" sizes="32x32" href="{% static 'blog/assets/favicon/favicon-32x32.png' %}">
+      <link rel="icon" type="image/png" sizes="16x16" href="{% static 'blog/assets/favicon/favicon-16x16.png' %}">
+      <link rel="manifest" href="{% static 'blog/assets/favicon/site.webmanifest' %}">
+      <link rel="mask-icon" href="{% static 'blog/assets/favicon/safari-pinned-tab.svg' %}" color="#6366f1">
+      <link rel="shortcut icon" href="{% static 'blog/assets/favicon/favicon.ico' %}">
+      <meta name="msapplication-TileColor" content="#080032">
+      <meta name="msapplication-config" content="{% static 'blog/assets/favicon/browserconfig.xml' %}">
+      <meta name="theme-color" content="#ffffff">
+      <!-- Vendor Styles -->
+      <link rel="stylesheet" media="screen" href="{% static 'blog/assets/vendor/boxicons/css/boxicons.min.css' %}">
+      <!-- Main Theme Styles + Bootstrap -->
+      <link rel="stylesheet" media="screen" href="{% static 'blog/assets/css/theme.min.css' %}">
+   </head>
+   <body>
+      <main class="page-wrapper">
+      <!-- Navbar -->
+      <header class="header navbar navbar-expand-lg shadow-sm"
+         style="background: linear-gradient(to right, #020310, #181a4d); height: 300px; padding-top: 20px;">
+         <div class="container px-3 d-flex flex-column align-items-center" style="height: 100%;">
+            <div class="d-flex justify-content-between align-items-center w-100 mb-4">
+               <a href="#" class="navbar-brand pe-3 d-flex align-items-center">
+               <img src="{% static 'blog/assets/img/logo.svg' %}" width="100">
+               </a>
+               <button type="button" class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#navbarNav"
+                  aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+               <span class="navbar-toggler-icon"></span>
+               </button>
+               <div class="d-none d-lg-flex">
+                  <a href="#" class="btn btn-primary btn-sm fs-sm rounded me-2" target="_blank" rel="noopener">
+                  Get Started
+                  </a>
+                  <a href="" class="btn btn-outline-light btn-sm fs-sm rounded" target="_blank" rel="noopener">
+                  Log In
+                  </a>
+               </div>
+            </div>
+            <div class="text-center">
+               <h6 class="text-white mb-0">BLOG</h6>
+               <h1 class="fw-light mb-5" style="color: #eea9fa;">Latest News, <span style="color:#0494e7;">Insights & Updates.</span></h1>
+            </div>
+         </div>
+      </header>
+      <!-- Breadcrumb -->
+      <nav class="container mt-lg-2" aria-label="breadcrumb">
+         <ol class="breadcrumb mb-0 pt-5">
+            <li class="breadcrumb-item">
+               <a href="#"><i class="bx bx-home-alt fs-lg me-1"></i>Home</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Blog List</li>
+         </ol>
+      </nav>
+      <!-- Blog Content -->
+      <section class="container mt-4 mb-lg-5 pt-lg-2 pb-5">
+         <div class="row row-cols-lg-2 row-cols-sm-2 row-cols-1 gy-md-2 gy-2">
+            <!-- Featured Posts -->
+            {% for post in featured_posts %}
+            <div class="col pb-3">
+               <article class="card border-0 shadow-sm h-100">
+                  <div class="position-relative">
+                     <a href="{% pageurl post %}" class="position-absolute top-0 start-0 w-100 h-100"
+                        aria-label="Read more"></a>
+                     <img src="{{ post.main_image.url }}" class="card-img-top" alt="{{ post.title }}">
+                  </div>
+                  <div class="card-body pb-4">
+                     <h3 class="h5 mb-0">
+                        <a href="{% pageurl post %}">{{ post.title }}</a>
+                     </h3>
+                     <p>{{ post.intro }}</p>
+                     <div class="d-flex align-items-center justify-content-between mb-3">
+                        <a href="#" class="badge fs-sm text-nav bg-secondary text-decoration-none">{{ post.category }}</a>
+                        <span class="fs-sm text-muted">{{ post.date }}</span>
+                     </div>
+                  </div>
+               </article>
+            </div>
+            {% endfor %}
+         </div>
+
+         <!-- Regular Blog Posts -->
+         <hr>
+         {% for post in blogpages %}
+         {% with post=post.specific %}
+         <article class="card border-0 shadow-sm overflow-hidden mb-4">
+            <div class="row g-0">
+               <div class="col-sm-4 position-relative">
+                  {% with post.main_image as main_image %}
+                  {% if main_image %}
+                  <div style="min-height: 15rem;">
+                     {% image main_image fill-640x400 class="w-100 h-100 object-cover" %}
+                  </div>
+                  {% endif %}
+                  {% endwith %}
+                  <a href="{% pageurl post %}" class="position-absolute top-0 start-0 w-100 h-100" aria-label="Read more"></a>
+               </div>
+               
+               <div class="col-sm-8">
+                  <div class="card-body">
+                     <h3 class="h4">
+                        <a href="{% pageurl post %}">{{ post.title }}</a>
+                     </h3>
+                     <p>{{ post.intro }}</p>
+                     <p>{{ post.body|richtext|truncatewords:40 }}</p>
+                     <div class="d-flex align-items-center mb-3">
+                        <span class="fs-sm text-muted border-start ps-3 ms-3">{{ post.date }}</span>
+                        <span class="ms-3">
+                           {% with tags=post.tags.all %}
+                           {% if tags %}
+                              {% for tag in tags %}
+                                 <a href="#" class="badge fs-sm text-nav bg-secondary text-decoration-none">{{ tag }}</a>
+                              {% endfor %}
+                           {% endif %}
+                           {% endwith %}
+                        </span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </article>
+         {% endwith %}
+         {% endfor %}
+
+      </section>
+      <!-- End Blog Content -->
+      </main>
+   </body>
+</html>
+
+{% endblock %}
