@@ -40,3 +40,49 @@ class BlogPageTag(TaggedItemBase):
     )
 
 
+# Blog Post (Single)
+class BlogPage(Page):
+    date = models.DateField("Post date")
+    intro = models.CharField(max_length=250)
+    body = RichTextField(blank=True)
+
+    # authors (snippet)
+    authors = ParentalManyToManyField('blog.Author', blank=True)
+
+    # tag manger
+    tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
+
+
+
+    # main image
+    def main_image(self):
+        gallery_item = self.gallery_images.first()
+        if gallery_item:
+            return gallery_item.image
+        else:
+            return None 
+    # image = models.ForeignKey(
+    #     "wagtailimages.Image",
+    #     on_delete=models.SET_NULL,
+    #     related_name="+",
+    #     null=True,
+    #     blank=True,
+    # )
+
+    search_fields = Page.search_fields + [
+        index.SearchField('intro'),
+        index.SearchField('body'),
+    ]
+
+    content_panels = Page.content_panels + [
+        MultiFieldPanel([
+            FieldPanel('date'),
+            FieldPanel('authors', widget=forms.CheckboxSelectMultiple),
+            FieldPanel('tags'),
+        ], heading="Blog Information"),
+            FieldPanel("intro"),
+        FieldPanel("body"),
+        InlinePanel('gallery_images', label="Gallery Images"),
+    ]
+
+
