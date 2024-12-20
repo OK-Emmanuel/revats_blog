@@ -11,6 +11,9 @@ from wagtail.fields import RichTextField
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.search import index
 
+from django.core.paginator import Paginator
+
+
 
 
 #Blog Index Page
@@ -25,9 +28,25 @@ class BlogIndexPage(Page):
         # Update context to include only published posts, ordered by reverse-chron
         context = super().get_context(request)
 
+        # Number of posts per page
+        posts_per_page = 10
+
+        
+
+        # Add featured posts to context
+        featured_posts = BlogPage.objects.filter(is_featured=True).live().order_by('-first_published_at')[:3]
+        context['featured_posts'] = featured_posts
+
         # list all live blog pages, ordered by date
         blogpages = self.get_children().live().order_by('-first_published_at')
+
+        # Paginate the blog posts
+        paginator = Paginator(blogpages, posts_per_page)
+        page_number = request.GET.get('page', 1)  # Default to page 1
+        page = paginator.get_page(page_number)
+
         context['blogpages'] = blogpages
+        context['paginator'] = paginator
         return context
 
 
@@ -52,7 +71,10 @@ class BlogPage(Page):
     # tag manger
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
 
+    # Featured
+    is_featured = models.BooleanField(default=False, help_text="Mark this post as featured on the homepage.")
 
+    
 
     # main image
     def main_image(self):
@@ -79,6 +101,7 @@ class BlogPage(Page):
             FieldPanel('date'),
             FieldPanel('authors', widget=forms.CheckboxSelectMultiple),
             FieldPanel('tags'),
+            FieldPanel('is_featured'),
         ], heading="Blog Information"),
             FieldPanel("intro"),
         FieldPanel("body"),
