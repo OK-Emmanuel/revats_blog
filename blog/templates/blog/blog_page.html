@@ -69,9 +69,7 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
-                        <!-- <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-                        <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
-                        <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li> -->
+                      
                     </ul>
                 </div>
                 <div class="offcanvas-header border-top">
@@ -91,7 +89,7 @@
                                 <div class="blog-image-container text-center" style="margin: 10px auto;">
                                     {% for item in page.gallery_images.all %}
                                     <div style="position: relative; margin-bottom: 10px;">
-                                        {% image item.image fill-800x600 %}
+                                        {% image item.image fill-1200x675 class="blog-image" %}
                                         <div class="overlay">
                                             <p>{{ item.caption }}</p>
                                         </div>
