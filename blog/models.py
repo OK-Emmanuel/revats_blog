@@ -12,6 +12,8 @@ from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.search import index
 
 from django.core.paginator import Paginator
+from wagtail.images.models import Image
+
 
 
 
@@ -82,14 +84,13 @@ class BlogPage(Page):
         if gallery_item:
             return gallery_item.image
         else:
-            return None 
-    # image = models.ForeignKey(
-    #     "wagtailimages.Image",
-    #     on_delete=models.SET_NULL,
-    #     related_name="+",
-    #     null=True,
-    #     blank=True,
-    # )
+        # If no gallery image, return a default image
+            try:
+                default_image = Image.objects.filter(title="default-image").first()  
+                return default_image
+            except Image.DoesNotExist:
+                return None  # Fallback if the default image doesn't exist
+   
 
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
