@@ -6,11 +6,11 @@
         <meta charset="utf-8" />
         <title>
             {% block title %}
-            {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
+                {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
             {% endblock %}
             {% block title_suffix %}
-            {% wagtail_site as current_site %}
-            {% if current_site and current_site.site_name %}- {{ current_site.site_name }}{% endif %}
+                {% wagtail_site as current_site %}
+                {% if current_site and current_site.site_name %}- {{ current_site.site_name }}{% endif %}
             {% endblock %}
         </title>
         {% if page.search_description %}
@@ -27,7 +27,9 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/revats.css' %}">
 
         {% block extra_css %}
-        {# Override this in templates to add extra stylesheets #}
+            {# Shared styles that apply globally for all pages #}
+            <link rel="stylesheet" media="screen" href="{% static 'blog/assets/vendor/boxicons/css/boxicons.min.css' %}">
+            <link rel="stylesheet" media="screen" href="{% static 'blog/assets/css/theme.min.css' %}">
         {% endblock %}
     </head>
 
@@ -40,7 +42,27 @@
         <script type="text/javascript" src="{% static 'js/revats.js' %}"></script>
 
         {% block extra_js %}
-        {# Override this in templates to add extra javascript #}
+            {# Extra page-specific JavaScript can be added here #}
+            <script src="{% static 'blog/assets/js/theme-switcher.js' %}"></script>
         {% endblock %}
     </body>
+
+    <footer class="footer bg-dark pt-5 pb-4 pb-lg-5" data-bs-theme="dark" style="background-color:#020300">
+        <div class="container pt-lg-4">
+            <div class="row text-center">
+                <div class="col-12 col-md-4 mb-3">
+                    <a href="https://www.x.com" target="_blank" class="text-pri-blue mx-2"><i class="bx bxl-twitter"></i></a>
+                    <a href="https://www.facebook.com" target="_blank" class="text-pri-blue mx-2"><i class="bx bxl-instagram"></i></a>
+                    <a href="https://www.linkedin.com" target="_blank" class="text-pri-blue mx-2"><i class="bx bxl-linkedin"></i></a>
+                    <a href="https://www.youtube.com" target="_blank" class="text-pri-blue mx-2"><i class="bx bxl-youtube"></i></a>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <img src="{% static 'blog/assets/img/revats-light.svg' %}" alt="Website Logo" class="img-fluid" style="max-height: 50px;">
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <p class="nav d-block fs-xs mb-0"><span class="text-light">Copyright &copy; Revats 2024</span></p>
+                </div>
+            </div>
+        </div>
+    </footer>
 </html>

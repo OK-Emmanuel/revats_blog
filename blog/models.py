@@ -11,6 +11,11 @@ from wagtail.fields import RichTextField
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.search import index
 
+from django.core.paginator import Paginator
+from wagtail.images.models import Image
+
+
+
 
 
 #Blog Index Page
@@ -25,9 +30,25 @@ class BlogIndexPage(Page):
         # Update context to include only published posts, ordered by reverse-chron
         context = super().get_context(request)
 
+        # Number of posts per page
+        posts_per_page = 10
+
+        
+
+        # Add featured posts to context
+        featured_posts = BlogPage.objects.filter(is_featured=True).live().order_by('-first_published_at')[:3]
+        context['featured_posts'] = featured_posts
+
         # list all live blog pages, ordered by date
         blogpages = self.get_children().live().order_by('-first_published_at')
+
+        # Paginate the blog posts
+        paginator = Paginator(blogpages, posts_per_page)
+        page_number = request.GET.get('page', 1)  # Default to page 1
+        page = paginator.get_page(page_number)
+
         context['blogpages'] = blogpages
+        context['paginator'] = paginator
         return context
 
 
@@ -52,7 +73,10 @@ class BlogPage(Page):
     # tag manger
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
 
+    # Featured
+    is_featured = models.BooleanField(default=False, help_text="Mark this post as featured on the homepage.")
 
+    
 
     # main image
     def main_image(self):
@@ -60,14 +84,13 @@ class BlogPage(Page):
         if gallery_item:
             return gallery_item.image
         else:
-            return None 
-    # image = models.ForeignKey(
-    #     "wagtailimages.Image",
-    #     on_delete=models.SET_NULL,
-    #     related_name="+",
-    #     null=True,
-    #     blank=True,
-    # )
+        # If no gallery image, return a default image
+            try:
+                default_image = Image.objects.filter(title="default-image").first()  
+                return default_image
+            except Image.DoesNotExist:
+                return None  # Fallback if the default image doesn't exist
+   
 
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
@@ -79,6 +102,7 @@ class BlogPage(Page):
             FieldPanel('date'),
             FieldPanel('authors', widget=forms.CheckboxSelectMultiple),
             FieldPanel('tags'),
+            FieldPanel('is_featured'),
         ], heading="Blog Information"),
             FieldPanel("intro"),
         FieldPanel("body"),
